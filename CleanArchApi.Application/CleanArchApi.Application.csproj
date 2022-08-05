@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Persistence\" />
+    <None Remove="Persistence\Contracts\" />
+    <None Remove="Profiles\" />
+    <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <None Remove="AutoMapper" />
+    <None Remove="DTOs\" />
+    <None Remove="DTOs\Common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Persistence\" />
+    <Folder Include="Persistence\Contracts\" />
+    <Folder Include="Profiles\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="DTOs\Common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CleanArchApi.Domain\CleanArchApi.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+</Project>

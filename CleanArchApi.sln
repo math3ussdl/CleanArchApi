@@ -3,10 +3,36 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 25.0.1700.7
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{26239378-183F-43BE-A4D0-F314D0330996}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2FCC63AE-88E7-44CA-810C-FB8AD7721F4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{593D062C-62F3-4EAC-BA9A-6E7E6658F8EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{62324E3C-D647-404E-879B-C01A864DACAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{86733F62-9505-42EB-8D14-7CB0E381478D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{04868C78-FC2F-46D3-9E6E-67C4E09736F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchApi.Domain", "CleanArchApi.Domain\CleanArchApi.Domain.csproj", "{47381946-BA14-4EF8-BE18-FCF0409D86D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchApi.Application", "CleanArchApi.Application\CleanArchApi.Application.csproj", "{A251CCEB-5089-43C0-B424-F6A92486F9F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47381946-BA14-4EF8-BE18-FCF0409D86D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47381946-BA14-4EF8-BE18-FCF0409D86D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47381946-BA14-4EF8-BE18-FCF0409D86D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47381946-BA14-4EF8-BE18-FCF0409D86D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A251CCEB-5089-43C0-B424-F6A92486F9F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A251CCEB-5089-43C0-B424-F6A92486F9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A251CCEB-5089-43C0-B424-F6A92486F9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A251CCEB-5089-43C0-B424-F6A92486F9F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -18,5 +44,13 @@ Global
 		Policies = $0
 		$0.StandardHeader = $1
 		description = A minimal WebApi written in C#/.NET that demonstrates Clean Architecture, Solid Principles, and TDD (Test-driven Development) concepts.
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{593D062C-62F3-4EAC-BA9A-6E7E6658F8EC} = {26239378-183F-43BE-A4D0-F314D0330996}
+		{62324E3C-D647-404E-879B-C01A864DACAC} = {26239378-183F-43BE-A4D0-F314D0330996}
+		{86733F62-9505-42EB-8D14-7CB0E381478D} = {26239378-183F-43BE-A4D0-F314D0330996}
+		{04868C78-FC2F-46D3-9E6E-67C4E09736F1} = {26239378-183F-43BE-A4D0-F314D0330996}
+		{47381946-BA14-4EF8-BE18-FCF0409D86D6} = {62324E3C-D647-404E-879B-C01A864DACAC}
+		{A251CCEB-5089-43C0-B424-F6A92486F9F9} = {62324E3C-D647-404E-879B-C01A864DACAC}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Common\" />
+    <None Remove="CleanArchApi.Application\obj\Debug\net6.0\CleanArchApi.Application.csproj.AssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="CleanArchApi.Application\obj\Debug\net6.0\CleanArchApi.Application.GlobalUsings.g.cs" />
+  </ItemGroup>
+</Project>
