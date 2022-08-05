@@ -1,8 +1,6 @@
-﻿namespace CleanArchApi.Domain;
+﻿namespace CleanArchApi.Application.DTOs.Author;
 
-using Common;
-
-public class Author : BaseDomainEntity
+public class AuthorCreateDto
 {
 	public string Name { get; set; }
 	public string Email { get; set; }

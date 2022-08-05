@@ -1,15 +1,29 @@
 ﻿namespace CleanArchApi.Application.Profiles;
 
 using AutoMapper;
-using Application.DTOs;
+using DTOs.Author;
+using DTOs.Book;
+using DTOs.Publisher;
 using Domain;
 
 public class MappingProfile : Profile
 {
 	public MappingProfile()
 	{
-		CreateMap<Author, AuthorDto>().ReverseMap();
-		CreateMap<Book, BookDto>().ReverseMap();
-		CreateMap<Publisher, PublisherDto>().ReverseMap();
+		#region Author Mappings
+		CreateMap<Author, AuthorCreateDto>().ReverseMap();
+		CreateMap<Author, AuthorDetailDto>().ReverseMap();
+		CreateMap<Author, AuthorListDto>().ReverseMap();
+		#endregion Author
+
+		#region Book Mappings
+		CreateMap<Book, BookCreateDto>().ReverseMap();
+		CreateMap<Book, BookDetailDto>().ReverseMap();
+		#endregion Book
+
+		#region Publisher Mappings
+		CreateMap<Publisher, PublisherCreateDto>().ReverseMap();
+		CreateMap<Publisher, PublisherDetailDto>().ReverseMap();
+		#endregion Publisher
 	}
 }

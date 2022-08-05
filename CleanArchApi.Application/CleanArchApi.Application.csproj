@@ -13,6 +13,33 @@
     <None Remove="AutoMapper" />
     <None Remove="DTOs\" />
     <None Remove="DTOs\Common\" />
+    <None Remove="MediatR" />
+    <None Remove="MediatR.Extensions.Microsoft.DependencyInjection" />
+    <None Remove="Features\" />
+    <None Remove="Features\Books\" />
+    <None Remove="Features\Books\Handlers\" />
+    <None Remove="Features\Books\Requests\" />
+    <None Remove="Features\Books\Handlers\Commands\" />
+    <None Remove="Features\Books\Handlers\Queries\" />
+    <None Remove="Features\Authors\" />
+    <None Remove="Features\Authors\Requests\" />
+    <None Remove="Features\Authors\Handlers\" />
+    <None Remove="Features\Authors\Handlers\Queries\" />
+    <None Remove="Features\Authors\Handlers\Commands\" />
+    <None Remove="Features\Publishers\" />
+    <None Remove="Features\Publishers\Requests\" />
+    <None Remove="Features\Publishers\Handlers\" />
+    <None Remove="Features\Publishers\Handlers\Queries\" />
+    <None Remove="Features\Publishers\Handlers\Commands\" />
+    <None Remove="Features\Authors\Requests\Commands\" />
+    <None Remove="Features\Authors\Requests\Queries\" />
+    <None Remove="Features\Books\Requests\Commands\" />
+    <None Remove="Features\Books\Requests\Queries\" />
+    <None Remove="Features\Publishers\Requests\Commands\" />
+    <None Remove="Features\Publishers\Requests\Queries\" />
+    <None Remove="DTOs\Author\" />
+    <None Remove="DTOs\Book\" />
+    <None Remove="DTOs\Publisher\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Persistence\" />
@@ -20,6 +47,31 @@
     <Folder Include="Profiles\" />
     <Folder Include="DTOs\" />
     <Folder Include="DTOs\Common\" />
+    <Folder Include="Features\" />
+    <Folder Include="Features\Books\" />
+    <Folder Include="Features\Books\Handlers\" />
+    <Folder Include="Features\Books\Requests\" />
+    <Folder Include="Features\Books\Handlers\Commands\" />
+    <Folder Include="Features\Books\Handlers\Queries\" />
+    <Folder Include="Features\Authors\" />
+    <Folder Include="Features\Authors\Requests\" />
+    <Folder Include="Features\Authors\Handlers\" />
+    <Folder Include="Features\Authors\Handlers\Queries\" />
+    <Folder Include="Features\Authors\Handlers\Commands\" />
+    <Folder Include="Features\Publishers\" />
+    <Folder Include="Features\Publishers\Requests\" />
+    <Folder Include="Features\Publishers\Handlers\" />
+    <Folder Include="Features\Publishers\Handlers\Queries\" />
+    <Folder Include="Features\Publishers\Handlers\Commands\" />
+    <Folder Include="Features\Authors\Requests\Commands\" />
+    <Folder Include="Features\Authors\Requests\Queries\" />
+    <Folder Include="Features\Books\Requests\Commands\" />
+    <Folder Include="Features\Books\Requests\Queries\" />
+    <Folder Include="Features\Publishers\Requests\Commands\" />
+    <Folder Include="Features\Publishers\Requests\Queries\" />
+    <Folder Include="DTOs\Author\" />
+    <Folder Include="DTOs\Book\" />
+    <Folder Include="DTOs\Publisher\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CleanArchApi.Domain\CleanArchApi.Domain.csproj" />
@@ -27,5 +79,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
   </ItemGroup>
 </Project>
