@@ -3,7 +3,7 @@
 using AutoMapper;
 using DTOs.Publisher.Validators;
 using MediatR;
-using Persistence.Contracts;
+using Contracts.Persistence;
 using Requests.Commands;
 using Responses;
 

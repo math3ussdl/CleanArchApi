@@ -5,7 +5,7 @@ using Domain;
 using DTOs.Publisher;
 using Exceptions;
 using MediatR;
-using Persistence.Contracts;
+using Contracts.Persistence;
 using Requests.Queries;
 
 public class GetPublisherDetailRequestHandler :

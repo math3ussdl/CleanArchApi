@@ -1,11 +1,12 @@
 ﻿namespace CleanArchApi.Application.Features.Books.Handlers.Queries;
 
 using AutoMapper;
+using MediatR;
+
 using Domain;
 using DTOs.Book;
 using Exceptions;
-using MediatR;
-using Persistence.Contracts;
+using Contracts.Persistence;
 using Requests.Queries;
 
 public class GetBookDetailRequestHandler :

@@ -1,7 +1,8 @@
 ﻿namespace CleanArchApi.Application.DTOs.Book.Validators;
 
 using FluentValidation;
-using Persistence.Contracts;
+
+using Contracts.Persistence;
 
 public class BookCreateDtoValidator : AbstractValidator<BookCreateDto>
 {

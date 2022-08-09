@@ -1,7 +1,8 @@
 ﻿namespace CleanArchApi.Application.Features.Authors.Requests.Commands;
 
-using DTOs.Author;
 using MediatR;
+
+using DTOs.Author;
 using Responses;
 
 public class UpdateAuthorCommand : IRequest<BaseCommandResponse>

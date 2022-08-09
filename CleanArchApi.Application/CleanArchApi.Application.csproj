@@ -47,10 +47,11 @@
     <None Remove="DTOs\Publisher\Validators\" />
     <None Remove="Exceptions\" />
     <None Remove="Responses\" />
+    <None Remove="Contracts\Infrastructure\" />
+    <None Remove="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Persistence\" />
-    <Folder Include="Persistence\Contracts\" />
+    <Folder Include="Contracts\" />
     <Folder Include="Profiles\" />
     <Folder Include="DTOs\" />
     <Folder Include="DTOs\Common\" />
@@ -84,6 +85,8 @@
     <Folder Include="DTOs\Publisher\Validators\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Responses\" />
+    <Folder Include="Contracts\Infrastructure\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CleanArchApi.Domain\CleanArchApi.Domain.csproj" />

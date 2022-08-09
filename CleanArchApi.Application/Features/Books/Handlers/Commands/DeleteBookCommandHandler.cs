@@ -2,7 +2,8 @@
 
 using AutoMapper;
 using MediatR;
-using Persistence.Contracts;
+
+using Contracts.Persistence;
 using Requests.Commands;
 using Responses;
 

@@ -1,9 +1,10 @@
 ﻿namespace CleanArchApi.Application.Features.Authors.Handlers.Commands;
 
 using AutoMapper;
-using DTOs.Author.Validators;
 using MediatR;
-using Persistence.Contracts;
+
+using DTOs.Author.Validators;
+using Contracts.Persistence;
 using Requests.Commands;
 using Responses;
 

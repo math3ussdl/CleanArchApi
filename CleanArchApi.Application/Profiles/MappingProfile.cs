@@ -1,6 +1,7 @@
 ﻿namespace CleanArchApi.Application.Profiles;
 
 using AutoMapper;
+
 using DTOs.Author;
 using DTOs.Book;
 using DTOs.Publisher;

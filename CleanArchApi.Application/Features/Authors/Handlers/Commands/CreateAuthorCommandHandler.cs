@@ -1,10 +1,13 @@
 ﻿namespace CleanArchApi.Application.Features.Authors.Handlers.Commands;
 
 using AutoMapper;
+using MediatR;
+
+using Contracts.Infrastructure;
+using Contracts.Persistence;
 using Domain;
 using DTOs.Author.Validators;
-using MediatR;
-using Persistence.Contracts;
+using Models;
 using Requests.Commands;
 using Responses;
 
@@ -13,12 +16,14 @@ public class CreateAuthorCommandHandler :
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
+	private readonly IEmailSender _emailSender;
 
 	public CreateAuthorCommandHandler(IAuthorRepository authorRepository,
-		IMapper mapper)
+		IMapper mapper, IEmailSender emailSender)
 	{
 		_authorRepository = authorRepository;
 		_mapper = mapper;
+		_emailSender = emailSender;
 	}
 
 	public async Task<BaseCommandResponse> Handle(CreateAuthorCommand request,
@@ -42,6 +47,15 @@ public class CreateAuthorCommandHandler :
 		{
 			var author = _mapper.Map<Author>(body);
 			await _authorRepository.Add(author);
+
+			Email email = new()
+			{
+				To = author.Email,
+				Subject = "Account created!",
+				Body = $"Hello, {author.Name}! Your account has been created!"
+			};
+
+			await _emailSender.SendEmail(email);
 
 			response.Success = true;
 			response.Message = "Author successfully created!";

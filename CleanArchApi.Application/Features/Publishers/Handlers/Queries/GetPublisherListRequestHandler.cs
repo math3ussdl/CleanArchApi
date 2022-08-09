@@ -3,7 +3,7 @@
 using AutoMapper;
 using DTOs.Publisher;
 using MediatR;
-using Persistence.Contracts;
+using Contracts.Persistence;
 using Requests.Queries;
 
 public class GetPublisherListRequestHandler :

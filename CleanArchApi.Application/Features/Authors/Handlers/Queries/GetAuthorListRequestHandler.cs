@@ -1,9 +1,10 @@
 ﻿namespace CleanArchApi.Application.Features.Authors.Handlers.Queries;
 
 using AutoMapper;
-using DTOs.Author;
 using MediatR;
-using Persistence.Contracts;
+
+using DTOs.Author;
+using Contracts.Persistence;
 using Requests.Queries;
 
 public class GetAuthorListRequestHandler :

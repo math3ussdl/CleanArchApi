@@ -1,4 +1,4 @@
-﻿namespace CleanArchApi.Application.Persistence.Contracts;
+﻿namespace CleanArchApi.Application.Contracts.Persistence;
 
 public interface IGenericRepository<T, Id> where T : class
 {

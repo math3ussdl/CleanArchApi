@@ -1,7 +1,8 @@
 ﻿namespace CleanArchApi.Application.Features.Books.Requests.Commands;
 
-using DTOs.Book;
 using MediatR;
+
+using DTOs.Book;
 using Responses;
 
 public class CreateBookCommand : IRequest<BaseCommandResponse>

@@ -1,7 +1,8 @@
 ﻿namespace CleanArchApi.Application.Features.Publishers.Requests.Commands;
 
-using DTOs.Publisher;
 using MediatR;
+
+using DTOs.Publisher;
 using Responses;
 
 public class CreatePublisherCommand : IRequest<BaseCommandResponse>

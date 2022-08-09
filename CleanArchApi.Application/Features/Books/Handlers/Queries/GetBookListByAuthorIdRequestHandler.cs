@@ -1,9 +1,10 @@
 ﻿namespace CleanArchApi.Application.Features.Books.Handlers.Queries;
 
 using AutoMapper;
-using DTOs.Book;
 using MediatR;
-using Persistence.Contracts;
+
+using DTOs.Book;
+using Contracts.Persistence;
 using Requests.Queries;
 
 public class GetBookListByAuthorIdRequestHandler :

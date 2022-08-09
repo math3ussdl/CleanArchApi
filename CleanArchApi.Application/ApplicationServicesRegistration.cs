@@ -1,8 +1,8 @@
 ﻿namespace CleanArchApi.Application;
 
-using System.Reflection;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 public static class ApplicationServicesRegistration
 {

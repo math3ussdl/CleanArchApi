@@ -1,7 +1,8 @@
 ﻿namespace CleanArchApi.Application.Features.Authors.Requests.Queries;
 
-using DTOs.Author;
 using MediatR;
+
+using DTOs.Author;
 
 public class GetAuthorListRequest : IRequest<List<AuthorListDto>>
 {

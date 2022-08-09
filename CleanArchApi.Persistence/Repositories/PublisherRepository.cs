@@ -1,6 +1,6 @@
 ﻿namespace CleanArchApi.Persistence.Repositories;
 
-using Application.Persistence.Contracts;
+using Application.Contracts.Persistence;
 using Domain;
 
 public class PublisherRepository : GenericRepository<Publisher, int>, IPublisherRepository

@@ -1,7 +1,8 @@
 ﻿namespace CleanArchApi.Application.Features.Books.Requests.Queries;
 
-using DTOs.Book;
 using MediatR;
+
+using DTOs.Book;
 
 public class GetBookListByAuthorIdRequest : IRequest<List<BookDetailDto>>
 {

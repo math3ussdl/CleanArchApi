@@ -1,6 +1,6 @@
 ﻿namespace CleanArchApi.Persistence;
 
-using Application.Persistence.Contracts;
+using Application.Contracts.Persistence;
 using Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
