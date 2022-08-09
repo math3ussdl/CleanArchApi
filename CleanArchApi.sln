@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchApi.Domain", "Clea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchApi.Application", "CleanArchApi.Application\CleanArchApi.Application.csproj", "{A251CCEB-5089-43C0-B424-F6A92486F9F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchApi.Infrastructure", "CleanArchApi.Infrastructure\CleanArchApi.Infrastructure.csproj", "{4D5427F8-1808-4C31-B009-F7B4AFABCAB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchApi.Persistence", "CleanArchApi.Persistence\CleanArchApi.Persistence.csproj", "{6E5AAECB-7FC1-4C45-B8D7-53F87EEE623D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{A251CCEB-5089-43C0-B424-F6A92486F9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A251CCEB-5089-43C0-B424-F6A92486F9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A251CCEB-5089-43C0-B424-F6A92486F9F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D5427F8-1808-4C31-B009-F7B4AFABCAB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D5427F8-1808-4C31-B009-F7B4AFABCAB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D5427F8-1808-4C31-B009-F7B4AFABCAB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D5427F8-1808-4C31-B009-F7B4AFABCAB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E5AAECB-7FC1-4C45-B8D7-53F87EEE623D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E5AAECB-7FC1-4C45-B8D7-53F87EEE623D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E5AAECB-7FC1-4C45-B8D7-53F87EEE623D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E5AAECB-7FC1-4C45-B8D7-53F87EEE623D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,5 +64,7 @@ Global
 		{04868C78-FC2F-46D3-9E6E-67C4E09736F1} = {26239378-183F-43BE-A4D0-F314D0330996}
 		{47381946-BA14-4EF8-BE18-FCF0409D86D6} = {62324E3C-D647-404E-879B-C01A864DACAC}
 		{A251CCEB-5089-43C0-B424-F6A92486F9F9} = {62324E3C-D647-404E-879B-C01A864DACAC}
+		{4D5427F8-1808-4C31-B009-F7B4AFABCAB0} = {86733F62-9505-42EB-8D14-7CB0E381478D}
+		{6E5AAECB-7FC1-4C45-B8D7-53F87EEE623D} = {86733F62-9505-42EB-8D14-7CB0E381478D}
 	EndGlobalSection
 EndGlobal
