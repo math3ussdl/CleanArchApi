@@ -2,8 +2,9 @@
 
 using DTOs.Publisher;
 using MediatR;
+using Responses;
 
-public class CreatePublisherCommand : IRequest<Unit>
+public class CreatePublisherCommand : IRequest<BaseCommandResponse>
 {
 	public PublisherCreateDto PublisherCreateDto { get; set; }
 }

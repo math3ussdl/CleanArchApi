@@ -1,15 +1,14 @@
 ﻿namespace CleanArchApi.Application.Features.Authors.Handlers.Commands;
 
 using AutoMapper;
-using Domain;
 using DTOs.Author.Validators;
-using Exceptions;
 using MediatR;
 using Persistence.Contracts;
 using Requests.Commands;
+using Responses;
 
 public class UpdateAuthorCommandHandler :
-	IRequestHandler<UpdateAuthorCommand, Unit>
+	IRequestHandler<UpdateAuthorCommand, BaseCommandResponse>
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
@@ -21,26 +20,42 @@ public class UpdateAuthorCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<Unit> Handle(UpdateAuthorCommand request,
+	public async Task<BaseCommandResponse> Handle(UpdateAuthorCommand request,
 		CancellationToken cancellationToken)
 	{
+		BaseCommandResponse response = new();
 		var body = request.AuthorUpdateDto;
 
 		var validator = new AuthorUpdateDtoValidator();
 		var validationResult = await validator.ValidateAsync(body, cancellationToken);
 
 		if (validationResult.IsValid == false)
-			throw new ValidationException(validationResult);
+		{
+			response.Success = false;
+			response.Message = "Validation failed!";
+			response.Errors = validationResult.Errors
+				.Select(e => e.ErrorMessage)
+				.ToList();
+		}
+		else
+		{
+			var author = await _authorRepository.Get(body.Id);
 
-		var author = await _authorRepository.Get(body.Id);
+			if (author == null)
+			{
+				response.Success = false;
+				response.Message = "Author not found!";
+			}
+			else
+			{
+				_mapper.Map(body, author);
+				await _authorRepository.Update(author);
 
-		if (author == null)
-			throw new NotFoundException(nameof(Author), body.Id);
+				response.Success = true;
+				response.Message = "Author successfully updated!";
+			}
+		}
 
-		_mapper.Map(body, author);
-
-		await _authorRepository.Update(author);
-
-		return Unit.Value;
+		return response;
 	}
 }

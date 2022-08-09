@@ -7,9 +7,10 @@ using Exceptions;
 using MediatR;
 using Persistence.Contracts;
 using Requests.Commands;
+using Responses;
 
 public class CreatePublisherCommandHandler :
-	IRequestHandler<CreatePublisherCommand, Unit>
+	IRequestHandler<CreatePublisherCommand, BaseCommandResponse>
 {
 	private readonly IPublisherRepository _publisherRepository;
 	private readonly IMapper _mapper;
@@ -21,20 +22,32 @@ public class CreatePublisherCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<Unit> Handle(CreatePublisherCommand request,
+	public async Task<BaseCommandResponse> Handle(CreatePublisherCommand request,
 		CancellationToken cancellationToken)
 	{
+		BaseCommandResponse response = new();
 		var body = request.PublisherCreateDto;
 
 		var validator = new PublisherCreateDtoValidator();
 		var validationResult = await validator.ValidateAsync(body, cancellationToken);
 
 		if (validationResult.IsValid == false)
-			throw new ValidationException(validationResult);
+		{
+			response.Success = false;
+			response.Message = "Validation failed!";
+			response.Errors = validationResult.Errors
+				.Select(e => e.ErrorMessage)
+				.ToList();
+		}
+		else
+		{
+			var publisher = _mapper.Map<Publisher>(body);
+			await _publisherRepository.Add(publisher);
 
-		var publisher = _mapper.Map<Publisher>(body);
-		await _publisherRepository.Add(publisher);
+			response.Success = true;
+			response.Message = "Publisher successfully created!";
+		}
 
-		return Unit.Value;
+		return response;
 	}
 }

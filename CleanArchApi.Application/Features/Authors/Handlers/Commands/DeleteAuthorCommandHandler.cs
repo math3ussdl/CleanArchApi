@@ -1,14 +1,13 @@
 ﻿namespace CleanArchApi.Application.Features.Authors.Handlers.Commands;
 
 using AutoMapper;
-using Domain;
-using Exceptions;
 using MediatR;
 using Persistence.Contracts;
 using Requests.Commands;
+using Responses;
 
 public class DeleteAuthorCommandHandler :
-	IRequestHandler<DeleteAuthorCommand, Unit>
+	IRequestHandler<DeleteAuthorCommand, BaseCommandResponse>
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
@@ -20,16 +19,24 @@ public class DeleteAuthorCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<Unit> Handle(DeleteAuthorCommand request,
+	public async Task<BaseCommandResponse> Handle(DeleteAuthorCommand request,
 		CancellationToken cancellationToken)
 	{
+		BaseCommandResponse response = new();
 		var author = await _authorRepository.Get(request.Id);
 
 		if (author == null)
-			throw new NotFoundException(nameof(Author), request.Id);
+		{
+			response.Success = false;
+			response.Message = "Author not found!";
+		} else
+		{
+			await _authorRepository.Delete(author);
 
-		await _authorRepository.Delete(author);
+			response.Success = true;
+			response.Message = "Author successfully deleted!";
+		}
 
-		return Unit.Value;
+		return response;
 	}
 }

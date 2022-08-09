@@ -1,15 +1,14 @@
 ﻿namespace CleanArchApi.Application.Features.Publishers.Handlers.Commands;
 
 using AutoMapper;
-using Domain;
 using DTOs.Publisher.Validators;
-using Exceptions;
 using MediatR;
 using Persistence.Contracts;
 using Requests.Commands;
+using Responses;
 
 public class UpdatePublisherCommandHandler :
-	IRequestHandler<UpdatePublisherCommand, Unit>
+	IRequestHandler<UpdatePublisherCommand, BaseCommandResponse>
 {
 	private readonly IPublisherRepository _publisherRepository;
 	private readonly IMapper _mapper;
@@ -21,27 +20,43 @@ public class UpdatePublisherCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<Unit> Handle(UpdatePublisherCommand request,
+	public async Task<BaseCommandResponse> Handle(UpdatePublisherCommand request,
 		CancellationToken cancellationToken)
 	{
+		BaseCommandResponse response = new();
 		var body = request.PublisherUpdateDto;
 
 		var validator = new PublisherUpdateDtoValidator();
 		var validationResult = await validator.ValidateAsync(body, cancellationToken);
 
 		if (validationResult.IsValid == false)
-			throw new ValidationException(validationResult);
+		{
+			response.Success = false;
+			response.Message = "Validation failed!";
+			response.Errors = validationResult.Errors
+				.Select(e => e.ErrorMessage)
+				.ToList();
+		}
+		else
+		{
+			var publisher = await _publisherRepository.Get(body.Id);
 
-		var publisher = await _publisherRepository.Get(body.Id);
+			if (publisher == null)
+			{
+				response.Success = false;
+				response.Message = "Publisher not found!";
+			}
+			else
+			{
+				_mapper.Map(body, publisher);
+				await _publisherRepository.Update(publisher);
 
-		if (publisher == null)
-			throw new NotFoundException(nameof(Publisher), body.Id);
+				response.Success = true;
+				response.Message = "Publisher successfully updated!";
+			}
+		}
 
-		_mapper.Map(body, publisher);
-
-		await _publisherRepository.Update(publisher);
-
-		return Unit.Value;
+		return response;
 	}
 }
 

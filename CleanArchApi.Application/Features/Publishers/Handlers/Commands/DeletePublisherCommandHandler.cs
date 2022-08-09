@@ -6,9 +6,10 @@ using Exceptions;
 using MediatR;
 using Persistence.Contracts;
 using Requests.Commands;
+using Responses;
 
 public class DeletePublisherCommandHandler :
-	IRequestHandler<DeletePublisherCommand, Unit>
+	IRequestHandler<DeletePublisherCommand, BaseCommandResponse>
 {
 	private readonly IPublisherRepository _publisherRepository;
 	private readonly IMapper _mapper;
@@ -20,16 +21,25 @@ public class DeletePublisherCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<Unit> Handle(DeletePublisherCommand request,
+	public async Task<BaseCommandResponse> Handle(DeletePublisherCommand request,
 		CancellationToken cancellationToken)
 	{
+		BaseCommandResponse response = new();
 		var publisher = await _publisherRepository.Get(request.Id);
 
 		if (publisher == null)
-			throw new NotFoundException(nameof(Publisher), request.Id);
+		{
+			response.Success = false;
+			response.Message = "Publisher not found!";
+		}
+		else
+		{
+			await _publisherRepository.Delete(publisher);
 
-		await _publisherRepository.Delete(publisher);
+			response.Success = true;
+			response.Message = "Publisher successfully deleted!";
+		}
 
-		return Unit.Value;
+		return response;
 	}
 }

@@ -3,12 +3,13 @@
 using AutoMapper;
 using Domain;
 using DTOs.Book.Validators;
-using Exceptions;
 using MediatR;
 using Persistence.Contracts;
 using Requests.Commands;
+using Responses;
 
-public class CreateBookCommandHandler :	IRequestHandler<CreateBookCommand, Unit>
+public class CreateBookCommandHandler :
+	IRequestHandler<CreateBookCommand, BaseCommandResponse>
 {
 	private readonly IBookRepository _bookRepository;
 	private readonly IPublisherRepository _publisherRepository;
@@ -23,20 +24,32 @@ public class CreateBookCommandHandler :	IRequestHandler<CreateBookCommand, Unit>
 		_mapper = mapper;
 	}
 
-	public async Task<Unit> Handle(CreateBookCommand request,
+	public async Task<BaseCommandResponse> Handle(CreateBookCommand request,
 		CancellationToken cancellationToken)
 	{
+		BaseCommandResponse response = new();
 		var body = request.BookCreateDto;
 
 		var validator = new BookCreateDtoValidator(_bookRepository, _publisherRepository);
 		var validationResult = await validator.ValidateAsync(body, cancellationToken);
 
 		if (validationResult.IsValid == false)
-			throw new ValidationException(validationResult);
+		{
+			response.Success = false;
+			response.Message = "Validation failed!";
+			response.Errors = validationResult.Errors
+				.Select(e => e.ErrorMessage)
+				.ToList();
+		}
+		else
+		{
+			var book = _mapper.Map<Book>(body);
+			await _bookRepository.Add(book);
 
-		var book = _mapper.Map<Book>(body);
-		await _bookRepository.Add(book);
+			response.Success = true;
+			response.Message = "Book successfully created!";
+		}
 
-		return Unit.Value;
+		return response;
 	}
 }

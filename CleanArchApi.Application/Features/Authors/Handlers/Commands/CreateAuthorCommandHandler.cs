@@ -3,13 +3,13 @@
 using AutoMapper;
 using Domain;
 using DTOs.Author.Validators;
-using Exceptions;
 using MediatR;
 using Persistence.Contracts;
 using Requests.Commands;
+using Responses;
 
 public class CreateAuthorCommandHandler :
-	IRequestHandler<CreateAuthorCommand, Unit>
+	IRequestHandler<CreateAuthorCommand, BaseCommandResponse>
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
@@ -21,20 +21,32 @@ public class CreateAuthorCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<Unit> Handle(CreateAuthorCommand request,
+	public async Task<BaseCommandResponse> Handle(CreateAuthorCommand request,
 		CancellationToken cancellationToken)
 	{
+		BaseCommandResponse response = new();
 		var body = request.AuthorCreateDto;
 
 		var validator = new AuthorCreateDtoValidator();
 		var validationResult = await validator.ValidateAsync(body, cancellationToken);
 
 		if (validationResult.IsValid == false)
-			throw new ValidationException(validationResult);
+		{
+			response.Success = false;
+			response.Message = "Validation failed!";
+			response.Errors = validationResult.Errors
+				.Select(e => e.ErrorMessage)
+				.ToList();
+		}
+		else
+		{
+			var author = _mapper.Map<Author>(body);
+			await _authorRepository.Add(author);
 
-		var author = _mapper.Map<Author>(body);
-		await _authorRepository.Add(author);
+			response.Success = true;
+			response.Message = "Author successfully created!";
+		}
 
-		return Unit.Value;
+		return response;
 	}
 }
