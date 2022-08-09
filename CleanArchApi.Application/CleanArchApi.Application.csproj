@@ -40,6 +40,13 @@
     <None Remove="DTOs\Author\" />
     <None Remove="DTOs\Book\" />
     <None Remove="DTOs\Publisher\" />
+    <None Remove="FluentValidation" />
+    <None Remove="FluentValidation.DependencyInjectionExtensions" />
+    <None Remove="DTOs\Author\Validators\" />
+    <None Remove="DTOs\Book\Validators\" />
+    <None Remove="DTOs\Publisher\Validators\" />
+    <None Remove="Exceptions\" />
+    <None Remove="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Persistence\" />
@@ -72,14 +79,18 @@
     <Folder Include="DTOs\Author\" />
     <Folder Include="DTOs\Book\" />
     <Folder Include="DTOs\Publisher\" />
+    <Folder Include="DTOs\Author\Validators\" />
+    <Folder Include="DTOs\Book\Validators\" />
+    <Folder Include="DTOs\Publisher\Validators\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Responses\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CleanArchApi.Domain\CleanArchApi.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
-    <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.0" />
   </ItemGroup>
 </Project>

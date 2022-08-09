@@ -1,6 +1,8 @@
 ﻿namespace CleanArchApi.Application.DTOs.Book;
 
-public class BookCreateDto : IBookDto
+using Common;
+
+public class BookUpdateDto : BaseDto, IBookDto
 {
 	public string Title { get; set; }
 	public int AuthorId { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace CleanArchApi.Application.DTOs.Author;
 
-public class AuthorCreateDto : IAuthorDto
+public interface IAuthorDto
 {
 	public string Name { get; set; }
 	public string Email { get; set; }

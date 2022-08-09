@@ -1,27 +1,26 @@
-﻿namespace CleanArchApi.Application.Features.Publishers.Handlers.Queries;
+﻿namespace CleanArchApi.Application.Features.Publishers.Handlers.Commands;
 
 using AutoMapper;
 using Domain;
-using DTOs.Publisher;
 using Exceptions;
 using MediatR;
 using Persistence.Contracts;
-using Requests.Queries;
+using Requests.Commands;
 
-public class GetPublisherDetailRequestHandler :
-	IRequestHandler<GetPublisherDetailRequest, PublisherDetailDto>
+public class DeletePublisherCommandHandler :
+	IRequestHandler<DeletePublisherCommand, Unit>
 {
 	private readonly IPublisherRepository _publisherRepository;
 	private readonly IMapper _mapper;
 
-	public GetPublisherDetailRequestHandler(IPublisherRepository publisherRepository,
+	public DeletePublisherCommandHandler(IPublisherRepository publisherRepository,
 		IMapper mapper)
 	{
 		_publisherRepository = publisherRepository;
 		_mapper = mapper;
 	}
 
-	public async Task<PublisherDetailDto> Handle(GetPublisherDetailRequest request,
+	public async Task<Unit> Handle(DeletePublisherCommand request,
 		CancellationToken cancellationToken)
 	{
 		var publisher = await _publisherRepository.Get(request.Id);
@@ -29,6 +28,8 @@ public class GetPublisherDetailRequestHandler :
 		if (publisher == null)
 			throw new NotFoundException(nameof(Publisher), request.Id);
 
-		return _mapper.Map<PublisherDetailDto>(publisher);
+		await _publisherRepository.Delete(publisher);
+
+		return Unit.Value;
 	}
 }

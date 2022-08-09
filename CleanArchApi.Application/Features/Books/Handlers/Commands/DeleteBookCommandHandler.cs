@@ -1,27 +1,26 @@
-﻿namespace CleanArchApi.Application.Features.Books.Handlers.Queries;
+﻿namespace CleanArchApi.Application.Features.Books.Handlers.Commands;
 
 using AutoMapper;
 using Domain;
-using DTOs.Book;
 using Exceptions;
 using MediatR;
 using Persistence.Contracts;
-using Requests.Queries;
+using Requests.Commands;
 
-public class GetBookDetailRequestHandler :
-	IRequestHandler<GetBookDetailRequest, BookDetailDto>
+public class DeleteBookCommandHandler :
+	IRequestHandler<DeleteBookCommand, Unit>
 {
 	private readonly IBookRepository _bookRepository;
 	private readonly IMapper _mapper;
 
-	public GetBookDetailRequestHandler(IBookRepository bookRepository,
+	public DeleteBookCommandHandler(IBookRepository bookRepository,
 		IMapper mapper)
 	{
 		_bookRepository = bookRepository;
 		_mapper = mapper;
 	}
 
-	public async Task<BookDetailDto> Handle(GetBookDetailRequest request,
+	public async Task<Unit> Handle(DeleteBookCommand request,
 		CancellationToken cancellationToken)
 	{
 		var book = await _bookRepository.Get(request.Id);
@@ -29,6 +28,8 @@ public class GetBookDetailRequestHandler :
 		if (book == null)
 			throw new NotFoundException(nameof(Book), request.Id);
 
-		return _mapper.Map<BookDetailDto>(book);
+		await _bookRepository.Delete(book);
+
+		return Unit.Value;
 	}
 }
