@@ -33,6 +33,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("CorsPolicy");
+app.UsePathBase("/api/v1");
 app.MapControllers();
 
 app.Run();

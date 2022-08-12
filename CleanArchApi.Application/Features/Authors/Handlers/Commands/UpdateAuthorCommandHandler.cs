@@ -40,7 +40,7 @@ public class UpdateAuthorCommandHandler :
 		}
 		else
 		{
-			var author = await _authorRepository.Get(body.Id);
+			var author = await _authorRepository.Get(request.Id);
 
 			if (author == null)
 			{

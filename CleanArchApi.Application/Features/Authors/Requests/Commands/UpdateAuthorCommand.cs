@@ -7,5 +7,6 @@ using Responses;
 
 public class UpdateAuthorCommand : IRequest<BaseCommandResponse>
 {
+	public int Id { get; set; }
 	public AuthorUpdateDto AuthorUpdateDto { get; set; }
 }

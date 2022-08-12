@@ -2,7 +2,7 @@
 
 using Common;
 
-public class AuthorUpdateDto : BaseDto, IAuthorDto
+public class AuthorUpdateDto : IAuthorDto
 {
 	public string Name { get; set; }
 	public string Email { get; set; }

@@ -13,6 +13,8 @@
     <None Remove="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <None Remove="Repositories\" />
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
+    <None Remove="Configurations\" />
+    <None Remove="Configurations\Entities\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
@@ -25,5 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
+    <Folder Include="Configurations\" />
+    <Folder Include="Configurations\Entities\" />
   </ItemGroup>
 </Project>
