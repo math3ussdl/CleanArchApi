@@ -2,6 +2,8 @@
 
 A minimal WebApi written in C#/.NET that demonstrates Clean Architecture, Solid Principles, and TDD (Test-driven Development) concepts.
 
+<br>
+
 ## Core Concepts
 - SOLID
 	- SRP - Single Responsability Principle;
@@ -9,14 +11,24 @@ A minimal WebApi written in C#/.NET that demonstrates Clean Architecture, Solid 
 	- LSP - Liskov Substitution Principle;
 	- ISP - Interface Segregation Principle;
 	- DIP - Dependency Inversion Principle.
+
+<br>
+
 - TDD
 	- Data Mock;
 	- Unit Testing;
 	- Integration Testing
-- Clean Architecture
-	- Domain Layer;
-	- Data Layer;
-	- Infra Layer;
-	- IoC Layer;
-	- Core Layer;
 
+<br>
+
+- Clean Architecture
+	- Core Layer;
+	- Domain Layer;
+	- Persistence Layer;
+	- Infrastructure Layer;
+
+<br>
+
+- Design Patterns
+	- CQRS;
+	- Mediator
