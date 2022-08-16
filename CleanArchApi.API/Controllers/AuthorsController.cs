@@ -47,14 +47,10 @@ public class AuthorsController : ControllerBase
 		return BadRequest(response);
 	}
 
-	[HttpPut("{id}")]
-	public async Task<ActionResult> UpdateAuthor(int id, [FromBody] AuthorUpdateDto author)
+	[HttpPut]
+	public async Task<ActionResult> UpdateAuthor([FromBody] AuthorUpdateDto author)
 	{
-		var command = new UpdateAuthorCommand
-		{
-			AuthorUpdateDto = author,
-			Id = id
-		};
+		var command = new UpdateAuthorCommand { AuthorUpdateDto = author };
 		await _mediator.Send(command);
 
 		return StatusCode(StatusCodes.Status204NoContent);

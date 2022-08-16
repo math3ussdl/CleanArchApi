@@ -30,7 +30,7 @@ public class UpdateAuthorCommandHandler :
 		var validator = new AuthorUpdateDtoValidator();
 		var validationResult = await validator.ValidateAsync(body, cancellationToken);
 
-		if (validationResult.IsValid == false)
+		if (!validationResult.IsValid)
 		{
 			response.Success = false;
 			response.Message = "Validation failed!";
@@ -40,7 +40,7 @@ public class UpdateAuthorCommandHandler :
 		}
 		else
 		{
-			var author = await _authorRepository.Get(request.Id);
+			var author = await _authorRepository.Get(request.AuthorUpdateDto.Id);
 
 			if (author == null)
 			{

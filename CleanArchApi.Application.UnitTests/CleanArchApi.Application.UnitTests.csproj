@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="Shouldly" Version="4.0.3" />
+    <PackageReference Include="Bogus" Version="34.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Moq" />
+    <None Remove="Shouldly" />
+    <None Remove="Mocks\" />
+    <None Remove="Mocks\Repositories\" />
+    <None Remove="Bogus" />
+    <None Remove="Features\" />
+    <None Remove="Features\Authors\" />
+    <None Remove="Features\Authors\Queries\" />
+    <None Remove="Features\Authors\Commands\" />
+    <None Remove="Mocks\Infrastructure\" />
+    <None Remove="Mocks\Entities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mocks\" />
+    <Folder Include="Mocks\Repositories\" />
+    <Folder Include="Features\" />
+    <Folder Include="Features\Authors\" />
+    <Folder Include="Features\Authors\Queries\" />
+    <Folder Include="Features\Authors\Commands\" />
+    <Folder Include="Mocks\Infrastructure\" />
+    <Folder Include="Mocks\Entities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CleanArchApi.Application\CleanArchApi.Application.csproj" />
+    <ProjectReference Include="..\CleanArchApi.Domain\CleanArchApi.Domain.csproj" />
+  </ItemGroup>
+</Project>

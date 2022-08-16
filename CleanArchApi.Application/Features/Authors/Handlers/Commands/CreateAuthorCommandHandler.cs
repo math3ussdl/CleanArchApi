@@ -35,7 +35,7 @@ public class CreateAuthorCommandHandler :
 		var validator = new AuthorCreateDtoValidator();
 		var validationResult = await validator.ValidateAsync(body, cancellationToken);
 
-		if (validationResult.IsValid == false)
+		if (!validationResult.IsValid)
 		{
 			response.Success = false;
 			response.Message = "Validation failed!";

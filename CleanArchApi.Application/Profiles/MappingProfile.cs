@@ -13,6 +13,7 @@ public class MappingProfile : Profile
 	{
 		#region Author Mappings
 		CreateMap<Author, AuthorCreateDto>().ReverseMap();
+		CreateMap<Author, AuthorUpdateDto>().ReverseMap();
 		CreateMap<Author, AuthorDetailDto>().ReverseMap();
 		CreateMap<Author, AuthorListDto>().ReverseMap();
 		#endregion Author
