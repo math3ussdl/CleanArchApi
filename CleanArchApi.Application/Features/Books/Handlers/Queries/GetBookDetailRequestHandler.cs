@@ -3,14 +3,13 @@
 using AutoMapper;
 using MediatR;
 
-using Domain;
 using DTOs.Book;
-using Exceptions;
 using Contracts.Persistence;
 using Requests.Queries;
+using Responses;
 
 public class GetBookDetailRequestHandler :
-	IRequestHandler<GetBookDetailRequest, BookDetailDto>
+	IRequestHandler<GetBookDetailRequest, BaseQueryResponse<BookDetailDto>>
 {
 	private readonly IBookRepository _bookRepository;
 	private readonly IMapper _mapper;
@@ -22,14 +21,34 @@ public class GetBookDetailRequestHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<BookDetailDto> Handle(GetBookDetailRequest request,
+	public async Task<BaseQueryResponse<BookDetailDto>> Handle(GetBookDetailRequest request,
 		CancellationToken cancellationToken)
 	{
-		var book = await _bookRepository.Get(request.Id);
+		BaseQueryResponse<BookDetailDto> response = new();
 
-		if (book == null)
-			throw new NotFoundException(nameof(Book), request.Id);
+		try
+		{
+			var book = await _bookRepository.Get(request.Id);
 
-		return _mapper.Map<BookDetailDto>(book);
+			if (book == null)
+			{
+				response.Success = false;
+				response.Message = "Book not found!";
+				response.ErrorType = ErrorTypes.NotFound;
+			}
+			else
+			{
+				response.Success = true;
+				response.Data = _mapper.Map<BookDetailDto>(book);				
+			}
+		}
+		catch (Exception ex)
+		{
+			response.Success = false;
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
+		}
+
+		return response;
 	}
 }

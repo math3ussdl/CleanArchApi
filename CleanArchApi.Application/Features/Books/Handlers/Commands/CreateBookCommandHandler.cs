@@ -10,7 +10,7 @@ using Requests.Commands;
 using Responses;
 
 public class CreateBookCommandHandler :
-	IRequestHandler<CreateBookCommand, BaseCommandResponse>
+	IRequestHandler<CreateBookCommand, BaseResponse>
 {
 	private readonly IBookRepository _bookRepository;
 	private readonly IPublisherRepository _publisherRepository;
@@ -25,30 +25,41 @@ public class CreateBookCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<BaseCommandResponse> Handle(CreateBookCommand request,
+	public async Task<BaseResponse> Handle(CreateBookCommand request,
 		CancellationToken cancellationToken)
 	{
-		BaseCommandResponse response = new();
-		var body = request.BookCreateDto;
+		BaseResponse response = new();
 
-		var validator = new BookCreateDtoValidator(_bookRepository, _publisherRepository);
-		var validationResult = await validator.ValidateAsync(body, cancellationToken);
+		try
+		{
+			var body = request.BookCreateDto;
 
-		if (validationResult.IsValid == false)
+			var validator = new BookCreateDtoValidator(_bookRepository, _publisherRepository);
+			var validationResult = await validator.ValidateAsync(body, cancellationToken);
+
+			if (validationResult.IsValid == false)
+			{
+				response.Success = false;
+				response.Message = "Validation failed!";
+				response.ErrorType = ErrorTypes.MalformedBody;
+				response.Errors = validationResult.Errors
+					.Select(e => e.ErrorMessage)
+					.ToList();
+			}
+			else
+			{
+				var book = _mapper.Map<Book>(body);
+				await _bookRepository.Add(book);
+
+				response.Success = true;
+				response.Message = "Book successfully created!";
+			}
+		}
+		catch (Exception ex)
 		{
 			response.Success = false;
-			response.Message = "Validation failed!";
-			response.Errors = validationResult.Errors
-				.Select(e => e.ErrorMessage)
-				.ToList();
-		}
-		else
-		{
-			var book = _mapper.Map<Book>(body);
-			await _bookRepository.Add(book);
-
-			response.Success = true;
-			response.Message = "Book successfully created!";
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
 		}
 
 		return response;

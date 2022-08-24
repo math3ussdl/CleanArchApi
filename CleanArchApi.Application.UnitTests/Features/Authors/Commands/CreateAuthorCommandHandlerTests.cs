@@ -2,38 +2,35 @@
 
 using AutoMapper;
 
-using Application.Contracts.Infrastructure;
-using Application.Contracts.Persistence;
-using Application.DTOs.Author;
 using Application.Features.Authors.Requests.Commands;
 using Application.Features.Authors.Handlers.Commands;
-using Application.Profiles;
-using Application.Responses;
+using Contracts.Persistence;
+using DTOs.Author;
+using Profiles;
+using Responses;
 using Mocks.Infrastructure;
 using Mocks.Repositories;
 
 public class CreateAuthorCommandHandlerTests
 {
-	private readonly IMapper _mapper;
 	private readonly Mock<IAuthorRepository> _mockRepo;
-	private readonly Mock<IEmailSender> _mockEmailSender;
 	private readonly CreateAuthorCommandHandler _handler;
 	private readonly AuthorCreateDto _authorCreateDto;
 
 	public CreateAuthorCommandHandlerTests()
 	{
 		_mockRepo = MockAuthorRepository.GetMock();
-		_mockEmailSender = MockEmailSender.GetMock();
 
 		var mapperConfig = new MapperConfiguration(c =>
 		{
 			c.AddProfile<MappingProfile>();
 		});
 
-		_mapper = mapperConfig.CreateMapper();
+		var mapper = mapperConfig.CreateMapper();
+		var mockEmailSender = MockEmailSender.GetMock();
 
 		_handler = new CreateAuthorCommandHandler(
-			_mockRepo.Object, _mapper, _mockEmailSender.Object);
+			_mockRepo.Object, mapper, mockEmailSender.Object);
 
 		var authorFaker = new Faker<AuthorCreateDto>()
 			.RuleFor(a => a.Name, f => f.Name.FullName())
@@ -54,14 +51,29 @@ public class CreateAuthorCommandHandlerTests
 
 		var authors = await _mockRepo.Object.GetAll();
 
-		result.ShouldBeOfType<BaseCommandResponse>();
-		result.Success.ShouldBe<bool>(false);
+		result.ShouldBeOfType<BaseResponse>();
+		result.Success.ShouldBe(false);
 		result.Message.ShouldBe<string>("Validation failed!");
+		result.ErrorType.ShouldBe(ErrorTypes.MalformedBody);
 		result.Errors.ShouldNotBeNull();
 		result.Errors.ShouldNotBeEmpty();
 		result.Errors[0].ShouldBe<string>("Name is required.");
 
 		authors.Count.ShouldBe(6);
+	}
+
+	[Fact]
+	public async Task CreateAuthor_UnexpectedErrorTestCase()
+	{
+		var result = await _handler.Handle(
+			new CreateAuthorCommand(),
+			CancellationToken.None
+		);
+
+		result.ShouldBeOfType<BaseResponse>();
+		result.Success.ShouldBe(false);
+		result.Message.ShouldNotBeNullOrEmpty();
+		result.ErrorType.ShouldBe(ErrorTypes.Internal);
 	}
 
 	[Fact]
@@ -71,14 +83,13 @@ public class CreateAuthorCommandHandlerTests
 			new CreateAuthorCommand { AuthorCreateDto = _authorCreateDto },
 			CancellationToken.None
 		);
-		result.Success = true;
 
 		var authors = await _mockRepo.Object.GetAll();
 
-		result.ShouldBeOfType<BaseCommandResponse>();
-		result.Success.ShouldBe<bool>(true);
+		result.ShouldBeOfType<BaseResponse>();
+		result.Success.ShouldBe(true);
 		result.Message.ShouldBe<string>("Author successfully created!");
 
-		authors.Count.ShouldBe<int>(7);
+		authors.Count.ShouldBe(7);
 	}
 }

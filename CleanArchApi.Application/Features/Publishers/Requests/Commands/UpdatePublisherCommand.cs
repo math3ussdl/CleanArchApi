@@ -5,7 +5,7 @@ using MediatR;
 using DTOs.Publisher;
 using Responses;
 
-public class UpdatePublisherCommand : IRequest<BaseCommandResponse>
+public class UpdatePublisherCommand : IRequest<BaseResponse>
 {
 	public PublisherUpdateDto PublisherUpdateDto { get; set; }
 }

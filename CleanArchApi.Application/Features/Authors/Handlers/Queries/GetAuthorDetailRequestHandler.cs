@@ -3,14 +3,13 @@
 using AutoMapper;
 using MediatR;
 
-using Domain;
 using DTOs.Author;
-using Exceptions;
 using Contracts.Persistence;
 using Requests.Queries;
+using Responses;
 
 public class GetAuthorDetailRequestHandler :
-	IRequestHandler<GetAuthorDetailRequest, AuthorDetailDto>
+	IRequestHandler<GetAuthorDetailRequest, BaseQueryResponse<AuthorDetailDto>>
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
@@ -22,14 +21,34 @@ public class GetAuthorDetailRequestHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<AuthorDetailDto> Handle(GetAuthorDetailRequest request,
+	public async Task<BaseQueryResponse<AuthorDetailDto>> Handle(GetAuthorDetailRequest request,
 		CancellationToken cancellationToken)
 	{
-		var author = await _authorRepository.Get(request.Id);
+		BaseQueryResponse<AuthorDetailDto> response = new();
 
-		if (author == null)
-			throw new NotFoundException(nameof(Author), request.Id);
+		try
+		{
+			var author = await _authorRepository.Get(request.Id);
 
-		return _mapper.Map<AuthorDetailDto>(author);
+			if (author == null)
+			{
+				response.Success = false;
+				response.Message = "Author not found!";
+				response.ErrorType = ErrorTypes.NotFound;
+			}
+			else
+			{
+				response.Success = true;
+				response.Data = _mapper.Map<AuthorDetailDto>(author);
+			}
+		}
+		catch (Exception ex)
+		{
+			response.Success = false;
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
+		}
+
+		return response;
 	}
 }

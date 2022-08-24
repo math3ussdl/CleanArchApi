@@ -1,14 +1,15 @@
 ﻿namespace CleanArchApi.Application.Features.Publishers.Handlers.Commands;
 
 using AutoMapper;
-using DTOs.Publisher.Validators;
 using MediatR;
+
 using Contracts.Persistence;
+using DTOs.Publisher.Validators;
 using Requests.Commands;
 using Responses;
 
 public class UpdatePublisherCommandHandler :
-	IRequestHandler<UpdatePublisherCommand, BaseCommandResponse>
+	IRequestHandler<UpdatePublisherCommand, BaseResponse>
 {
 	private readonly IPublisherRepository _publisherRepository;
 	private readonly IMapper _mapper;
@@ -20,41 +21,54 @@ public class UpdatePublisherCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<BaseCommandResponse> Handle(UpdatePublisherCommand request,
+	public async Task<BaseResponse> Handle(UpdatePublisherCommand request,
 		CancellationToken cancellationToken)
 	{
-		BaseCommandResponse response = new();
-		var body = request.PublisherUpdateDto;
+		BaseResponse response = new();
 
-		var validator = new PublisherUpdateDtoValidator();
-		var validationResult = await validator.ValidateAsync(body, cancellationToken);
-
-		if (validationResult.IsValid == false)
+		try
 		{
-			response.Success = false;
-			response.Message = "Validation failed!";
-			response.Errors = validationResult.Errors
-				.Select(e => e.ErrorMessage)
-				.ToList();
-		}
-		else
-		{
-			var publisher = await _publisherRepository.Get(body.Id);
+			var body = request.PublisherUpdateDto;
 
-			if (publisher == null)
+			var validator = new PublisherUpdateDtoValidator();
+			var validationResult = await validator.ValidateAsync(body, cancellationToken);
+
+			if (validationResult.IsValid == false)
 			{
 				response.Success = false;
-				response.Message = "Publisher not found!";
+				response.Message = "Validation failed!";
+				response.ErrorType = ErrorTypes.MalformedBody;
+				response.Errors = validationResult.Errors
+					.Select(e => e.ErrorMessage)
+					.ToList();
 			}
 			else
 			{
-				_mapper.Map(body, publisher);
-				await _publisherRepository.Update(publisher);
+				var publisher = await _publisherRepository.Get(body.Id);
 
-				response.Success = true;
-				response.Message = "Publisher successfully updated!";
+				if (publisher == null)
+				{
+					response.Success = false;
+					response.ErrorType = ErrorTypes.NotFound;
+					response.Message = "Publisher not found!";
+				}
+				else
+				{
+					_mapper.Map(body, publisher);
+					await _publisherRepository.Update(publisher);
+
+					response.Success = true;
+					response.Message = "Publisher successfully updated!";
+				}
 			}
 		}
+		catch (System.Exception ex)
+		{
+			response.Success = false;
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
+		}
+
 
 		return response;
 	}

@@ -36,6 +36,12 @@
     <None Remove="Features\Authors\Commands\" />
     <None Remove="Mocks\Infrastructure\" />
     <None Remove="Mocks\Entities\" />
+    <None Remove="Features\Books\" />
+    <None Remove="Features\Books\Queries\" />
+    <None Remove="Features\Publishers\" />
+    <None Remove="Features\Books\Commands\" />
+    <None Remove="Features\Publishers\Commands\" />
+    <None Remove="Features\Publishers\Queries\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mocks\" />
@@ -46,6 +52,12 @@
     <Folder Include="Features\Authors\Commands\" />
     <Folder Include="Mocks\Infrastructure\" />
     <Folder Include="Mocks\Entities\" />
+    <Folder Include="Features\Books\" />
+    <Folder Include="Features\Books\Queries\" />
+    <Folder Include="Features\Publishers\" />
+    <Folder Include="Features\Books\Commands\" />
+    <Folder Include="Features\Publishers\Commands\" />
+    <Folder Include="Features\Publishers\Queries\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CleanArchApi.Application\CleanArchApi.Application.csproj" />

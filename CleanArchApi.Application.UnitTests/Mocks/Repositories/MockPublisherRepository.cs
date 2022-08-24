@@ -1,6 +1,6 @@
 ﻿namespace CleanArchApi.Application.UnitTests.Mocks.Repositories;
 
-using Application.Contracts.Persistence;
+using Contracts.Persistence;
 using Domain;
 using Entities;
 
@@ -10,10 +10,12 @@ public static class MockPublisherRepository
 	{
 		var publisherFaker = MockPublisher.Mock();
 
-		List<Publisher> publishers = publisherFaker.Generate(4);
+		var publishers = publisherFaker.Generate(4);
 		var mockRepo = new Mock<IPublisherRepository>();
 
-		var id = It.IsInRange<int>(1, 6, Moq.Range.Inclusive);
+		var id = It.IsInRange<int>(1, 4, Moq.Range.Inclusive);
+
+		mockRepo.Setup(r => r.Exists(id)).ReturnsAsync(true);
 
 		mockRepo.Setup(r => r.GetAll()).ReturnsAsync(publishers);
 
@@ -34,6 +36,20 @@ public static class MockPublisherRepository
 			{
 				publishers.Remove(publishers.First(p => p.Id == id));
 			});
+
+		return mockRepo;
+	}
+
+	public static Mock<IPublisherRepository> GetMockWithExcept()
+	{
+		var mockRepo = GetMock();
+		
+		mockRepo.Setup(r => r.Exists(It.IsAny<int>())).Throws<Exception>();
+		mockRepo.Setup(r => r.GetAll()).Throws<Exception>();
+		mockRepo.Setup(r => r.Get(It.IsAny<int>())).Throws<Exception>();
+		mockRepo.Setup(r => r.Add(It.IsAny<Publisher>())).Throws<Exception>();
+		mockRepo.Setup(r => r.Update(It.IsAny<Publisher>())).Throws<Exception>();
+		mockRepo.Setup(r => r.Delete(It.IsAny<Publisher>())).Throws<Exception>();
 
 		return mockRepo;
 	}

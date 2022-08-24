@@ -3,8 +3,9 @@
 using MediatR;
 
 using DTOs.Author;
+using Responses;
 
-public class GetAuthorDetailRequest : IRequest<AuthorDetailDto>
+public class GetAuthorDetailRequest : IRequest<BaseQueryResponse<AuthorDetailDto>>
 {
-	public int Id { get; set; }
+	public int Id { get; init; }
 }

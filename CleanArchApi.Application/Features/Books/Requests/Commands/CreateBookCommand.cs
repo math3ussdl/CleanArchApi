@@ -5,7 +5,7 @@ using MediatR;
 using DTOs.Book;
 using Responses;
 
-public class CreateBookCommand : IRequest<BaseCommandResponse>
+public class CreateBookCommand : IRequest<BaseResponse>
 {
 	public BookCreateDto BookCreateDto { get; set; }
 }

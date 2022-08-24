@@ -2,15 +2,12 @@
 
 using AutoMapper;
 
-using Application.Contracts.Infrastructure;
-using Application.Contracts.Persistence;
-using Application.DTOs.Author;
 using Application.Features.Authors.Requests.Commands;
 using Application.Features.Authors.Handlers.Commands;
-using Application.Profiles;
-using Application.Responses;
-using Mocks.Infrastructure;
+using Contracts.Persistence;
 using Mocks.Repositories;
+using Profiles;
+using Responses;
 
 public class DeleteAuthorCommandHandlerTests
 {
@@ -31,7 +28,7 @@ public class DeleteAuthorCommandHandlerTests
 		_mapper = mapperConfig.CreateMapper();
 
 		_handler = new DeleteAuthorCommandHandler(_mockRepo.Object, _mapper);
-		_id = It.IsInRange<int>(1, 6, Moq.Range.Inclusive);
+		_id = It.IsInRange(1, 6, Moq.Range.Inclusive);
 	}
 
 	[Fact]
@@ -42,9 +39,28 @@ public class DeleteAuthorCommandHandlerTests
 			CancellationToken.None
 		);
 
-		result.ShouldBeOfType<BaseCommandResponse>();
-		result.Success.ShouldBe<bool>(false);
+		result.ShouldBeOfType<BaseResponse>();
+		result.Success.ShouldBe(false);
 		result.Message.ShouldBe<string>("Author not found!");
+		result.ErrorType.ShouldBe(ErrorTypes.NotFound);
+	}
+
+	[Fact]
+	public async Task DeleteAuthor_UnexpectedErrorTestCase()
+	{
+		var mockRepo = MockAuthorRepository.GetMockWithExcept();
+		var customHandler = new DeleteAuthorCommandHandler(
+			mockRepo.Object, _mapper);
+		
+		var result = await customHandler.Handle(
+			new DeleteAuthorCommand(),
+			CancellationToken.None
+		);
+
+		result.ShouldBeOfType<BaseResponse>();
+		result.Success.ShouldBe(false);
+		result.Message.ShouldNotBeNullOrEmpty();
+		result.ErrorType.ShouldBe(ErrorTypes.Internal);
 	}
 
 	[Fact]
@@ -57,10 +73,10 @@ public class DeleteAuthorCommandHandlerTests
 
 		var authors = await _mockRepo.Object.GetAll();
 
-		result.ShouldBeOfType<BaseCommandResponse>();
-		result.Success.ShouldBe<bool>(true);
+		result.ShouldBeOfType<BaseResponse>();
+		result.Success.ShouldBe(true);
 		result.Message.ShouldBe<string>("Author successfully deleted!");
 
-		authors.Count.ShouldBe<int>(6);
+		authors.Count.ShouldBe(6);
 	}
 }

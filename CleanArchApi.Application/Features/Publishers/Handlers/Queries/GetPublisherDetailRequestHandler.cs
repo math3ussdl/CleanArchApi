@@ -1,15 +1,15 @@
 ﻿namespace CleanArchApi.Application.Features.Publishers.Handlers.Queries;
 
 using AutoMapper;
-using Domain;
-using DTOs.Publisher;
-using Exceptions;
 using MediatR;
+
+using DTOs.Publisher;
 using Contracts.Persistence;
 using Requests.Queries;
+using Responses;
 
 public class GetPublisherDetailRequestHandler :
-	IRequestHandler<GetPublisherDetailRequest, PublisherDetailDto>
+	IRequestHandler<GetPublisherDetailRequest, BaseQueryResponse<PublisherDetailDto>>
 {
 	private readonly IPublisherRepository _publisherRepository;
 	private readonly IMapper _mapper;
@@ -21,14 +21,34 @@ public class GetPublisherDetailRequestHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<PublisherDetailDto> Handle(GetPublisherDetailRequest request,
+	public async Task<BaseQueryResponse<PublisherDetailDto>> Handle(GetPublisherDetailRequest request,
 		CancellationToken cancellationToken)
 	{
-		var publisher = await _publisherRepository.Get(request.Id);
+		BaseQueryResponse<PublisherDetailDto> response = new();
 
-		if (publisher == null)
-			throw new NotFoundException(nameof(Publisher), request.Id);
+		try
+		{
+			var publisher = await _publisherRepository.Get(request.Id);
 
-		return _mapper.Map<PublisherDetailDto>(publisher);
+			if (publisher == null)
+			{
+				response.Success = false;
+				response.Message = "Publisher not found!";
+				response.ErrorType = ErrorTypes.NotFound;
+			}
+			else
+			{
+				response.Success = true;
+				response.Data = _mapper.Map<PublisherDetailDto>(publisher);
+			}
+		}
+		catch (System.Exception ex)
+		{
+			response.Success = false;
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
+		}
+
+		return response;
 	}
 }

@@ -1,13 +1,15 @@
 ﻿namespace CleanArchApi.Application.Features.Publishers.Handlers.Queries;
 
 using AutoMapper;
-using DTOs.Publisher;
 using MediatR;
+
+using DTOs.Publisher;
 using Contracts.Persistence;
 using Requests.Queries;
+using Responses;
 
 public class GetPublisherListRequestHandler :
-	IRequestHandler<GetPublisherListRequest, List<PublisherDetailDto>>
+	IRequestHandler<GetPublisherListRequest, BaseQueryResponse<List<PublisherDetailDto>>>
 {
 	private readonly IPublisherRepository _publisherRepository;
 	private readonly IMapper _mapper;
@@ -20,10 +22,25 @@ public class GetPublisherListRequestHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<List<PublisherDetailDto>> Handle(GetPublisherListRequest request,
+	public async Task<BaseQueryResponse<List<PublisherDetailDto>>> Handle(GetPublisherListRequest request,
 		CancellationToken cancellationToken)
 	{
-		var publishers = await _publisherRepository.GetAll();
-		return _mapper.Map<List<PublisherDetailDto>>(publishers);
+		BaseQueryResponse<List<PublisherDetailDto>> response = new();
+
+		try
+		{
+			var publishers = await _publisherRepository.GetAll();
+
+			response.Success = true;
+			response.Data = _mapper.Map<List<PublisherDetailDto>>(publishers);
+		}
+		catch (System.Exception ex)
+		{
+			response.Success = false;
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
+		}
+
+		return response;
 	}
 }

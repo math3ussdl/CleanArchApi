@@ -2,12 +2,13 @@
 
 using AutoMapper;
 
-using Application.Contracts.Persistence;
-using Application.DTOs.Author;
 using Application.Features.Authors.Requests.Queries;
 using Application.Features.Authors.Handlers.Queries;
-using Application.Profiles;
+using Contracts.Persistence;
+using DTOs.Author;
 using Mocks.Repositories;
+using Profiles;
+using Responses;
 
 public class GetAuthorListRequestHandlerTests
 {
@@ -27,12 +28,29 @@ public class GetAuthorListRequestHandlerTests
 	}
 
 	[Fact]
+	public async Task GetAuthorList_UnexpectedErrorCaseTest()
+	{
+		var mockRepo = MockAuthorRepository.GetMockWithExcept();
+		
+		var customHandler = new GetAuthorListRequestHandler(mockRepo.Object, _mapper);
+		var result = await customHandler.Handle(new GetAuthorListRequest(),
+			CancellationToken.None);
+		
+		result.ShouldBeOfType<BaseQueryResponse<List<AuthorListDto>>>();
+		result.Success.ShouldBe(false);
+		result.Message.ShouldNotBeNullOrEmpty();
+		result.ErrorType.ShouldBe(ErrorTypes.Internal);
+	}
+
+	[Fact]
 	public async Task GetAuthorList_SuccessCaseTest()
 	{
 		var handler = new GetAuthorListRequestHandler(_mockRepo.Object, _mapper);
-		var result = await handler.Handle(new GetAuthorListRequest(), CancellationToken.None);
+		var result = await handler.Handle(new GetAuthorListRequest(),
+			CancellationToken.None);
 
-		result.ShouldBeOfType<List<AuthorListDto>>();
-		result.Count.ShouldBe(6);
+		result.ShouldBeOfType<BaseQueryResponse<List<AuthorListDto>>>();
+		result.Success.ShouldBe(true);
+		result.Data.Count.ShouldBe(6);
 	}
 }

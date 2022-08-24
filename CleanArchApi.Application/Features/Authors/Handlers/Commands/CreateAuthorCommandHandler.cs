@@ -12,7 +12,7 @@ using Requests.Commands;
 using Responses;
 
 public class CreateAuthorCommandHandler :
-	IRequestHandler<CreateAuthorCommand, BaseCommandResponse>
+	IRequestHandler<CreateAuthorCommand, BaseResponse>
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
@@ -26,39 +26,50 @@ public class CreateAuthorCommandHandler :
 		_emailSender = emailSender;
 	}
 
-	public async Task<BaseCommandResponse> Handle(CreateAuthorCommand request,
+	public async Task<BaseResponse> Handle(CreateAuthorCommand request,
 		CancellationToken cancellationToken)
 	{
-		BaseCommandResponse response = new();
-		var body = request.AuthorCreateDto;
+		BaseResponse response = new();
 
-		var validator = new AuthorCreateDtoValidator();
-		var validationResult = await validator.ValidateAsync(body, cancellationToken);
+		try
+		{
+			var body = request.AuthorCreateDto;
 
-		if (!validationResult.IsValid)
+			var validator = new AuthorCreateDtoValidator();
+			var validationResult = await validator.ValidateAsync(body, cancellationToken);
+
+			if (!validationResult.IsValid)
+			{
+				response.Success = false;
+				response.Message = "Validation failed!";
+				response.ErrorType = ErrorTypes.MalformedBody;
+				response.Errors = validationResult.Errors
+					.Select(e => e.ErrorMessage)
+					.ToList();
+			}
+			else
+			{
+				var author = _mapper.Map<Author>(body);
+				await _authorRepository.Add(author);
+
+				Email email = new()
+				{
+					To = author.Email,
+					Subject = "Account created!",
+					Body = $"Hello, {author.Name}! Your account has been created!"
+				};
+
+				await _emailSender.SendEmail(email);
+
+				response.Success = true;
+				response.Message = "Author successfully created!";
+			}
+		}
+		catch (System.Exception ex)
 		{
 			response.Success = false;
-			response.Message = "Validation failed!";
-			response.Errors = validationResult.Errors
-				.Select(e => e.ErrorMessage)
-				.ToList();
-		}
-		else
-		{
-			var author = _mapper.Map<Author>(body);
-			await _authorRepository.Add(author);
-
-			Email email = new()
-			{
-				To = author.Email,
-				Subject = "Account created!",
-				Body = $"Hello, {author.Name}! Your account has been created!"
-			};
-
-			await _emailSender.SendEmail(email);
-
-			response.Success = true;
-			response.Message = "Author successfully created!";
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
 		}
 
 		return response;

@@ -6,9 +6,10 @@ using MediatR;
 using DTOs.Author;
 using Contracts.Persistence;
 using Requests.Queries;
+using Responses;
 
 public class GetAuthorListRequestHandler :
-	IRequestHandler<GetAuthorListRequest, List<AuthorListDto>>
+	IRequestHandler<GetAuthorListRequest, BaseQueryResponse<List<AuthorListDto>>>
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
@@ -20,10 +21,25 @@ public class GetAuthorListRequestHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<List<AuthorListDto>> Handle(GetAuthorListRequest request,
+	public async Task<BaseQueryResponse<List<AuthorListDto>>> Handle(GetAuthorListRequest request,
 		CancellationToken cancellationToken)
 	{
-		var authors = await _authorRepository.GetAll();
-		return _mapper.Map<List<AuthorListDto>>(authors);
+		BaseQueryResponse<List<AuthorListDto>> response = new();
+
+		try
+		{
+			var authors = await _authorRepository.GetAll();
+
+			response.Success = true;
+			response.Data = _mapper.Map<List<AuthorListDto>>(authors);
+		}
+		catch (System.Exception ex)
+		{
+			response.Success = false;
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
+		}
+
+		return response;
 	}
 }

@@ -6,9 +6,10 @@ using MediatR;
 using DTOs.Book;
 using Contracts.Persistence;
 using Requests.Queries;
+using Responses;
 
 public class GetBookListRequestHandler :
-	IRequestHandler<GetBookListRequest, List<BookDetailDto>>
+	IRequestHandler<GetBookListRequest, BaseQueryResponse<List<BookDetailDto>>>
 {
 	private readonly IBookRepository _bookRepository;
 	private readonly IMapper _mapper;
@@ -20,10 +21,25 @@ public class GetBookListRequestHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<List<BookDetailDto>> Handle(GetBookListRequest request,
+	public async Task<BaseQueryResponse<List<BookDetailDto>>> Handle(GetBookListRequest request,
 		CancellationToken cancellationToken)
 	{
-		var books = await _bookRepository.GetAll();
-		return _mapper.Map<List<BookDetailDto>>(books);
+		BaseQueryResponse<List<BookDetailDto>> response = new();
+
+		try
+		{
+			var books = await _bookRepository.GetAll();
+			
+			response.Success = true;
+			response.Data = _mapper.Map<List<BookDetailDto>>(books);
+		}
+		catch (Exception ex)
+		{
+			response.Success = false;
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
+		}
+
+		return response;
 	}
 }

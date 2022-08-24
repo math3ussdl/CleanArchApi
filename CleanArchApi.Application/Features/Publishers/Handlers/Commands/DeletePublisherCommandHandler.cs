@@ -1,45 +1,55 @@
 ﻿namespace CleanArchApi.Application.Features.Publishers.Handlers.Commands;
 
 using AutoMapper;
-using Domain;
-using Exceptions;
 using MediatR;
+
 using Contracts.Persistence;
 using Requests.Commands;
 using Responses;
 
 public class DeletePublisherCommandHandler :
-	IRequestHandler<DeletePublisherCommand, BaseCommandResponse>
+  IRequestHandler<DeletePublisherCommand, BaseResponse>
 {
-	private readonly IPublisherRepository _publisherRepository;
-	private readonly IMapper _mapper;
+  private readonly IPublisherRepository _publisherRepository;
+  private readonly IMapper _mapper;
 
-	public DeletePublisherCommandHandler(IPublisherRepository publisherRepository,
-		IMapper mapper)
-	{
-		_publisherRepository = publisherRepository;
-		_mapper = mapper;
-	}
+  public DeletePublisherCommandHandler(IPublisherRepository publisherRepository,
+    IMapper mapper)
+  {
+    _publisherRepository = publisherRepository;
+    _mapper = mapper;
+  }
 
-	public async Task<BaseCommandResponse> Handle(DeletePublisherCommand request,
-		CancellationToken cancellationToken)
-	{
-		BaseCommandResponse response = new();
-		var publisher = await _publisherRepository.Get(request.Id);
+  public async Task<BaseResponse> Handle(DeletePublisherCommand request,
+    CancellationToken cancellationToken)
+  {
+    BaseResponse response = new();
 
-		if (publisher == null)
-		{
-			response.Success = false;
-			response.Message = "Publisher not found!";
-		}
-		else
-		{
-			await _publisherRepository.Delete(publisher);
+    try
+    {
+      var publisher = await _publisherRepository.Get(request.Id);
 
-			response.Success = true;
-			response.Message = "Publisher successfully deleted!";
-		}
+      if (publisher == null)
+      {
+        response.Success = false;
+        response.ErrorType = ErrorTypes.NotFound;
+        response.Message = "Publisher not found!";
+      }
+      else
+      {
+        await _publisherRepository.Delete(publisher);
 
-		return response;
-	}
+        response.Success = true;
+        response.Message = "Publisher successfully deleted!";
+      }
+    }
+    catch (System.Exception ex)
+    {
+      response.Success = false;
+      response.Message = ex.Message;
+      response.ErrorType = ErrorTypes.Internal;
+    }
+
+    return response;
+  }
 }

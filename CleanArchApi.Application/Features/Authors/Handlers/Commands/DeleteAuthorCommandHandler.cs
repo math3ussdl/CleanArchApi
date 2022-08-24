@@ -8,7 +8,7 @@ using Requests.Commands;
 using Responses;
 
 public class DeleteAuthorCommandHandler :
-	IRequestHandler<DeleteAuthorCommand, BaseCommandResponse>
+	IRequestHandler<DeleteAuthorCommand, BaseResponse>
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
@@ -20,22 +20,34 @@ public class DeleteAuthorCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<BaseCommandResponse> Handle(DeleteAuthorCommand request,
+	public async Task<BaseResponse> Handle(DeleteAuthorCommand request,
 		CancellationToken cancellationToken)
 	{
-		BaseCommandResponse response = new();
-		var author = await _authorRepository.Get(request.Id);
+		BaseResponse response = new();
 
-		if (author == null)
+		try
+		{
+			var author = await _authorRepository.Get(request.Id);
+
+			if (author == null)
+			{
+				response.Success = false;
+				response.ErrorType = ErrorTypes.NotFound;
+				response.Message = "Author not found!";
+			}
+			else
+			{
+				await _authorRepository.Delete(author);
+
+				response.Success = true;
+				response.Message = "Author successfully deleted!";
+			}
+		}
+		catch (System.Exception ex)
 		{
 			response.Success = false;
-			response.Message = "Author not found!";
-		} else
-		{
-			await _authorRepository.Delete(author);
-
-			response.Success = true;
-			response.Message = "Author successfully deleted!";
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
 		}
 
 		return response;

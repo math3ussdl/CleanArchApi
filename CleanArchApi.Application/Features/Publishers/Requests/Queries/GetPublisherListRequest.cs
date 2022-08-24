@@ -3,7 +3,8 @@
 using MediatR;
 
 using DTOs.Publisher;
+using Responses;
 
-public class GetPublisherListRequest : IRequest<List<PublisherDetailDto>>
+public class GetPublisherListRequest : IRequest<BaseQueryResponse<List<PublisherDetailDto>>>
 {
 }

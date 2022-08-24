@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Application.DTOs.Author;
 using Application.Features.Authors.Requests.Commands;
 using Application.Features.Authors.Requests.Queries;
-using System.Net;
 
 [Route("authors")]
 [ApiController]

@@ -1,16 +1,16 @@
 ﻿namespace CleanArchApi.Application.Features.Publishers.Handlers.Commands;
 
 using AutoMapper;
+using MediatR;
+
+using Contracts.Persistence;
 using Domain;
 using DTOs.Publisher.Validators;
-using Exceptions;
-using MediatR;
-using Contracts.Persistence;
 using Requests.Commands;
 using Responses;
 
 public class CreatePublisherCommandHandler :
-	IRequestHandler<CreatePublisherCommand, BaseCommandResponse>
+	IRequestHandler<CreatePublisherCommand, BaseResponse>
 {
 	private readonly IPublisherRepository _publisherRepository;
 	private readonly IMapper _mapper;
@@ -22,30 +22,41 @@ public class CreatePublisherCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<BaseCommandResponse> Handle(CreatePublisherCommand request,
+	public async Task<BaseResponse> Handle(CreatePublisherCommand request,
 		CancellationToken cancellationToken)
 	{
-		BaseCommandResponse response = new();
-		var body = request.PublisherCreateDto;
+		BaseResponse response = new();
 
-		var validator = new PublisherCreateDtoValidator();
-		var validationResult = await validator.ValidateAsync(body, cancellationToken);
+		try
+		{
+			var body = request.PublisherCreateDto;
 
-		if (validationResult.IsValid == false)
+			var validator = new PublisherCreateDtoValidator();
+			var validationResult = await validator.ValidateAsync(body, cancellationToken);
+
+			if (validationResult.IsValid == false)
+			{
+				response.Success = false;
+				response.Message = "Validation failed!";
+				response.ErrorType = ErrorTypes.MalformedBody;
+				response.Errors = validationResult.Errors
+					.Select(e => e.ErrorMessage)
+					.ToList();
+			}
+			else
+			{
+				var publisher = _mapper.Map<Publisher>(body);
+				await _publisherRepository.Add(publisher);
+
+				response.Success = true;
+				response.Message = "Publisher successfully created!";
+			}
+		}
+		catch (System.Exception ex)
 		{
 			response.Success = false;
-			response.Message = "Validation failed!";
-			response.Errors = validationResult.Errors
-				.Select(e => e.ErrorMessage)
-				.ToList();
-		}
-		else
-		{
-			var publisher = _mapper.Map<Publisher>(body);
-			await _publisherRepository.Add(publisher);
-
-			response.Success = true;
-			response.Message = "Publisher successfully created!";
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
 		}
 
 		return response;

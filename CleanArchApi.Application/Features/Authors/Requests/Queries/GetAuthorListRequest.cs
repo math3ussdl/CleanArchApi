@@ -3,7 +3,8 @@
 using MediatR;
 
 using DTOs.Author;
+using Responses;
 
-public class GetAuthorListRequest : IRequest<List<AuthorListDto>>
+public class GetAuthorListRequest : IRequest<BaseQueryResponse<List<AuthorListDto>>>
 {
 }

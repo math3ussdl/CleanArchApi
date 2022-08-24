@@ -8,7 +8,7 @@ using Requests.Commands;
 using Responses;
 
 public class DeleteBookCommandHandler :
-	IRequestHandler<DeleteBookCommand, BaseCommandResponse>
+	IRequestHandler<DeleteBookCommand, BaseResponse>
 {
 	private readonly IBookRepository _bookRepository;
 	private readonly IMapper _mapper;
@@ -20,23 +20,34 @@ public class DeleteBookCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<BaseCommandResponse> Handle(DeleteBookCommand request,
+	public async Task<BaseResponse> Handle(DeleteBookCommand request,
 		CancellationToken cancellationToken)
 	{
-		BaseCommandResponse response = new();
-		var book = await _bookRepository.Get(request.Id);
+		BaseResponse response = new();
 
-		if (book == null)
+		try
+		{
+			var book = await _bookRepository.Get(request.Id);
+
+			if (book == null)
+			{
+				response.Success = false;
+				response.ErrorType = ErrorTypes.NotFound;
+				response.Message = "Book not found!";
+			}
+			else
+			{
+				await _bookRepository.Delete(book);
+
+				response.Success = true;
+				response.Message = "Book successfully deleted!";
+			}
+		}
+		catch (System.Exception ex)
 		{
 			response.Success = false;
-			response.Message = "Book not found!";
-		}
-		else
-		{
-			await _bookRepository.Delete(book);
-
-			response.Success = true;
-			response.Message = "Book successfully deleted!";
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
 		}
 
 		return response;

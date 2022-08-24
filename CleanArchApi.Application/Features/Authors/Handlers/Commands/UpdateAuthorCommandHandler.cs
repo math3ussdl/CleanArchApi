@@ -9,7 +9,7 @@ using Requests.Commands;
 using Responses;
 
 public class UpdateAuthorCommandHandler :
-	IRequestHandler<UpdateAuthorCommand, BaseCommandResponse>
+	IRequestHandler<UpdateAuthorCommand, BaseResponse>
 {
 	private readonly IAuthorRepository _authorRepository;
 	private readonly IMapper _mapper;
@@ -21,40 +21,52 @@ public class UpdateAuthorCommandHandler :
 		_mapper = mapper;
 	}
 
-	public async Task<BaseCommandResponse> Handle(UpdateAuthorCommand request,
+	public async Task<BaseResponse> Handle(UpdateAuthorCommand request,
 		CancellationToken cancellationToken)
 	{
-		BaseCommandResponse response = new();
-		var body = request.AuthorUpdateDto;
+		BaseResponse response = new();
 
-		var validator = new AuthorUpdateDtoValidator();
-		var validationResult = await validator.ValidateAsync(body, cancellationToken);
-
-		if (!validationResult.IsValid)
+		try
 		{
-			response.Success = false;
-			response.Message = "Validation failed!";
-			response.Errors = validationResult.Errors
-				.Select(e => e.ErrorMessage)
-				.ToList();
-		}
-		else
-		{
-			var author = await _authorRepository.Get(request.AuthorUpdateDto.Id);
+			var body = request.AuthorUpdateDto;
 
-			if (author == null)
+			var validator = new AuthorUpdateDtoValidator();
+			var validationResult = await validator.ValidateAsync(body, cancellationToken);
+
+			if (!validationResult.IsValid)
 			{
 				response.Success = false;
-				response.Message = "Author not found!";
+				response.Message = "Validation failed!";
+				response.ErrorType = ErrorTypes.MalformedBody;
+				response.Errors = validationResult.Errors
+					.Select(e => e.ErrorMessage)
+					.ToList();
 			}
 			else
 			{
-				_mapper.Map(body, author);
-				await _authorRepository.Update(author);
+				var author = await _authorRepository.Get(request.AuthorUpdateDto.Id);
 
-				response.Success = true;
-				response.Message = "Author successfully updated!";
+				if (author == null)
+				{
+					response.Success = false;
+					response.Message = "Author not found!";
+					response.ErrorType = ErrorTypes.NotFound;
+				}
+				else
+				{
+					_mapper.Map(body, author);
+					await _authorRepository.Update(author);
+
+					response.Success = true;
+					response.Message = "Author successfully updated!";
+				}
 			}
+		}
+		catch (System.Exception ex)
+		{
+			response.Success = false;
+			response.Message = ex.Message;
+			response.ErrorType = ErrorTypes.Internal;
 		}
 
 		return response;

@@ -2,42 +2,76 @@
 
 using AutoMapper;
 
-using Application.Contracts.Persistence;
-using Application.DTOs.Author;
 using Application.Features.Authors.Requests.Queries;
 using Application.Features.Authors.Handlers.Queries;
-using Application.Profiles;
+using DTOs.Author;
 using Mocks.Repositories;
+using Profiles;
+using Responses;
 
 public class GetAuthorDetailRequestHandlerTests
 {
-	private readonly IMapper _mapper;
-	private readonly Mock<IAuthorRepository> _mockRepo;
-	private readonly int _id;
+  private readonly IMapper _mapper;
+  private readonly GetAuthorDetailRequestHandler _handler;
+  private readonly int _id;
 
-	public GetAuthorDetailRequestHandlerTests()
-	{
-		_mockRepo = MockAuthorRepository.GetMock();
+  public GetAuthorDetailRequestHandlerTests()
+  {
+    var mockRepo = MockAuthorRepository.GetMock();
 
-		var mapperConfig = new MapperConfiguration(c =>
-		{
-			c.AddProfile<MappingProfile>();
-		});
+    var mapperConfig = new MapperConfiguration(c =>
+    {
+      c.AddProfile<MappingProfile>();
+    });
+    _mapper = mapperConfig.CreateMapper();
 
-		_mapper = mapperConfig.CreateMapper();
-		_id = It.IsInRange<int>(1, 6, Moq.Range.Inclusive);
-	}
+    _handler = new GetAuthorDetailRequestHandler(mockRepo.Object, _mapper);
+
+    _id = It.IsInRange(1, 6, Moq.Range.Inclusive);
+  }
 
 	[Fact]
-	public async Task GetAuthorDetail_SuccessCaseTest()
-	{
-		var authors = await _mockRepo.Object.GetAll();
+  public async Task GetAuthorDetail_NotFoundErrorTestCase()
+  {
+		var result = await _handler.Handle(
+      new GetAuthorDetailRequest { Id = 8 },
+      CancellationToken.None
+    );
 
-		var handler = new GetAuthorDetailRequestHandler(_mockRepo.Object, _mapper);
-		var result = await handler.Handle(new GetAuthorDetailRequest { Id = _id },
-			CancellationToken.None);
+    result.ShouldBeOfType<BaseQueryResponse<AuthorDetailDto>>();
+    result.Success.ShouldBe(false);
+    result.Message.ShouldBe<string>("Author not found!");
+    result.ErrorType.ShouldBe(ErrorTypes.NotFound);
+  }
 
-		result.ShouldBeOfType<AuthorDetailDto>();
-		result.Id = _id;
-	}
+  [Fact]
+  public async Task GetAuthorDetail_UnexpectedErrorTestCase()
+  {
+    var mockRepo = MockAuthorRepository.GetMockWithExcept();
+    var customHandler = new GetAuthorDetailRequestHandler(
+      mockRepo.Object, _mapper);
+
+    var result = await customHandler.Handle(
+      new GetAuthorDetailRequest(),
+      CancellationToken.None
+    );
+
+    result.ShouldBeOfType<BaseQueryResponse<AuthorDetailDto>>();
+		result.Success.ShouldBe(false);
+		result.Message.ShouldNotBeNullOrEmpty();
+		result.ErrorType.ShouldBe(ErrorTypes.Internal);
+  }
+
+  [Fact]
+  public async Task GetAuthorDetail_SuccessCaseTest()
+  {
+    var result = await _handler.Handle(
+      new GetAuthorDetailRequest { Id = _id },
+      CancellationToken.None
+    );
+
+    result.ShouldBeOfType<BaseQueryResponse<AuthorDetailDto>>();
+    result.Success.ShouldBe(true);
+    result.Data.Id.ShouldBe(_id);
+  }
 }

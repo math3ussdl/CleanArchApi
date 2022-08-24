@@ -4,7 +4,7 @@ using MediatR;
 
 using Responses;
 
-public class DeleteAuthorCommand : IRequest<BaseCommandResponse>
+public class DeleteAuthorCommand : IRequest<BaseResponse>
 {
 	public int Id { get; set; }
 }

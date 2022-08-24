@@ -13,19 +13,21 @@ public class MappingProfile : Profile
 	{
 		#region Author Mappings
 		CreateMap<Author, AuthorCreateDto>().ReverseMap();
-		CreateMap<Author, AuthorUpdateDto>().ReverseMap();
 		CreateMap<Author, AuthorDetailDto>().ReverseMap();
 		CreateMap<Author, AuthorListDto>().ReverseMap();
+		CreateMap<Author, AuthorUpdateDto>().ReverseMap();
 		#endregion Author
 
 		#region Book Mappings
 		CreateMap<Book, BookCreateDto>().ReverseMap();
 		CreateMap<Book, BookDetailDto>().ReverseMap();
+		CreateMap<Book, BookUpdateDto>().ReverseMap();
 		#endregion Book
 
 		#region Publisher Mappings
 		CreateMap<Publisher, PublisherCreateDto>().ReverseMap();
 		CreateMap<Publisher, PublisherDetailDto>().ReverseMap();
+		CreateMap<Publisher, PublisherUpdateDto>().ReverseMap();
 		#endregion Publisher
 	}
 }

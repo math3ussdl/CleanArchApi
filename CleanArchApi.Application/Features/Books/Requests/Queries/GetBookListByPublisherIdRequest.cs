@@ -3,8 +3,9 @@
 using MediatR;
 
 using DTOs.Book;
+using Responses;
 
-public class GetBookListByPublisherIdRequest : IRequest<List<BookDetailDto>>
+public class GetBookListByPublisherIdRequest : IRequest<BaseQueryResponse<List<BookDetailDto>>>
 {
 	public int PublisherId { get; set; }
 }

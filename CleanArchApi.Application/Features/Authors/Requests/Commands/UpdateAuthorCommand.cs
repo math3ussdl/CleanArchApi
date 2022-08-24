@@ -5,7 +5,7 @@ using MediatR;
 using DTOs.Author;
 using Responses;
 
-public class UpdateAuthorCommand : IRequest<BaseCommandResponse>
+public class UpdateAuthorCommand : IRequest<BaseResponse>
 {
 	public AuthorUpdateDto AuthorUpdateDto { get; set; }
 }
