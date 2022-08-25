@@ -65,7 +65,7 @@ public class CreateAuthorCommandHandler :
 				response.Message = "Author successfully created!";
 			}
 		}
-		catch (System.Exception ex)
+		catch (Exception ex)
 		{
 			response.Success = false;
 			response.Message = ex.Message;

@@ -4,33 +4,33 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using Application.DTOs.Author;
-using Application.Features.Authors.Requests.Commands;
-using Application.Features.Authors.Requests.Queries;
+using Application.DTOs.Publisher;
+using Application.Features.Publishers.Requests.Commands;
+using Application.Features.Publishers.Requests.Queries;
 using Application.Responses;
 
-[Route("authors")]
+[Route("publishers")]
 [ApiController]
-public class AuthorsController : ControllerBase
+public class PublishersController : ControllerBase
 {
-  private readonly IMediator _mediator;
-
-	public AuthorsController(IMediator mediator)
+	private readonly IMediator _mediator;
+	
+	public PublishersController(IMediator mediator)
 	{
 		_mediator = mediator;
 	}
-
+	
 	[HttpGet]
-	public async Task<ActionResult<List<AuthorListDto>>> GetAuthors()
+	public async Task<ActionResult<List<PublisherDetailDto>>> GetPublishers()
 	{
-		var response = await _mediator.Send(new GetAuthorListRequest());
+		var response = await _mediator.Send(new GetPublisherListRequest());
 		return response.Success ? Ok(response) : StatusCode(StatusCodes.Status500InternalServerError, response);
 	}
 
 	[HttpGet("{id:int}")]
-	public async Task<ActionResult<AuthorDetailDto>> GetAuthor(int id)
+	public async Task<ActionResult<PublisherDetailDto>> GetPublisher(int id)
 	{
-		var response = await _mediator.Send(new GetAuthorDetailRequest { Id = id });
+		var response = await _mediator.Send(new GetPublisherDetailRequest { Id = id });
 
 		if (response.Success) return Ok(response);
 
@@ -42,9 +42,9 @@ public class AuthorsController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<ActionResult> CreateAuthor([FromBody] AuthorCreateDto author)
+	public async Task<ActionResult> CreatePublisher([FromBody] PublisherCreateDto publisher)
 	{
-		var command = new CreateAuthorCommand { AuthorCreateDto = author };
+		var command = new CreatePublisherCommand { PublisherCreateDto = publisher };
 		var response = await _mediator.Send(command);
 
 		if (response.Success) return Ok(response);
@@ -57,9 +57,9 @@ public class AuthorsController : ControllerBase
 	}
 
 	[HttpPut]
-	public async Task<ActionResult> UpdateAuthor([FromBody] AuthorUpdateDto author)
+	public async Task<ActionResult> UpdatePublisher([FromBody] PublisherUpdateDto publisher)
 	{
-		var command = new UpdateAuthorCommand { AuthorUpdateDto = author };
+		var command = new UpdatePublisherCommand { PublisherUpdateDto = publisher };
 		var response = await _mediator.Send(command);
 		
 		if (response.Success) return StatusCode(StatusCodes.Status204NoContent);
@@ -71,11 +71,11 @@ public class AuthorsController : ControllerBase
 			_ => StatusCode(StatusCodes.Status500InternalServerError, response)
 		};
 	}
-
+	
 	[HttpDelete]
-	public async Task<ActionResult> DeleteAuthor(int id)
+	public async Task<ActionResult> DeletePublisher(int id)
 	{
-		var command = new DeleteAuthorCommand { Id = id };
+		var command = new DeletePublisherCommand { Id = id };
 		var response = await _mediator.Send(command);
 
 		if (response.Success) return StatusCode(StatusCodes.Status204NoContent);

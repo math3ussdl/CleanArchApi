@@ -62,7 +62,7 @@ public class UpdateAuthorCommandHandler :
 				}
 			}
 		}
-		catch (System.Exception ex)
+		catch (Exception ex)
 		{
 			response.Success = false;
 			response.Message = ex.Message;

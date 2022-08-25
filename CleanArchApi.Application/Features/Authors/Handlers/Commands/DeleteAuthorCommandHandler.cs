@@ -43,7 +43,7 @@ public class DeleteAuthorCommandHandler :
 				response.Message = "Author successfully deleted!";
 			}
 		}
-		catch (System.Exception ex)
+		catch (Exception ex)
 		{
 			response.Success = false;
 			response.Message = ex.Message;
